@@ -1,9 +1,18 @@
-FROM python:3.11-slim
+# Use a lightweight python base image
+FROM python:3.10-slim
 
-RUN pip install pandas seaborn matplotlib
+# Set the working directory
+WORKDIR /app
 
-WORKDIR /test
-COPY ["StressLevelDataset.csv", "./"]
-ADD test.py .
+COPY prediction_service.py .
 
-CMD [ "python", "./test.py" ]
+COPY requirements.txt /app
+
+COPY iris_model /app/iris_model
+
+# Expose the port that FastAPI will run on
+EXPOSE 80
+
+RUN pip install -r requirements.txt
+
+CMD ["uvicorn", "prediction_service:app","--reload", "--host", "0.0.0.0", "--port", "80"]
