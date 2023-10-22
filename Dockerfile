@@ -1,5 +1,9 @@
-FROM ubuntu:20.04
+FROM python:3.11-slim
 
-RUN apt update && apt install -y sbcl
+RUN pip install pandas seaborn matplotlib
 
-WORKDIR /usr/src
+WORKDIR /test
+COPY ["StressLevelDataset.csv", "./"]
+ADD test.py .
+
+CMD [ "python", "./test.py" ]
